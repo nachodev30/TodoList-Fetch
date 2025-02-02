@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { Context } from "../appContext";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
-//create your first component
 const Home = () => {
+	const [inputValue, setInputValue] = useState("");
+	const {store, actions} = useContext(Context);
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="container form">
+			<h1> TodosList </h1>
+			<ul>
+				<li>
+					<input
+						type="text"
+						onChange={(e) => setInputValue(e.target.value)}
+						value={inputValue}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								actions.createTodo({label:inputValue});
+								setInputValue("");
+							}
+						}}
+						placeholder="Add a Task" className="pregunta"></input>
+				</li>
+				{store.listTodos.map((item, index) => (
+					<li className="line" key={item.id}>
+						<p className="item-name">{item.label}{""}</p>
+
+						<button
+							className="button"
+							onClick={() =>
+								actions.deleteTodo(item.id)
+
+							}
+						>Delete</button>
+					</li>
+				))}
+			</ul>
+			<div>{store.listTodos.length} task</div>
 		</div>
 	);
 };
